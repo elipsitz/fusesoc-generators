@@ -109,6 +109,7 @@ generators:
                          "output: files:" section.
         extraargs (str): Extra arguments to be passed to the build tool.
         chiselproject (str): Chisel project name to be passed to the build tool.
+        main_class (str): Main class to pass to the build tool.
         copy_core (bool): Copy the working directory to a temporary location and run
                           the command from there
         output (dict): A dictionary describing the expected output from the command.

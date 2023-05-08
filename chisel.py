@@ -14,6 +14,7 @@ class ChiselGenerator(Generator):
         chiselproject = self.config.get('chiselproject', None)
         outputdir = self.config.get('outputdir', "generated")
         extraargs = self.config.get('extraargs', "")
+        main_class = self.config.get('main_class', None)
         if buildtool == "mill" and chiselproject == None:
             print("The parameter 'chiselproject' must be defined.")
             exit(1)
@@ -45,11 +46,9 @@ class ChiselGenerator(Generator):
         # Define command and arguments based on build tool
         if buildtool == "mill":
             args = '-i ' + chiselproject + '.run ' + extraargs + ' --target-dir='+ outputdir
+            args = shlex.split(args)
         elif buildtool == "sbt":
-            args = '"run' + ' ' + extraargs + '--target-dir='+ outputdir + '"'
-
-
-        args = shlex.split(args)
+            args = [f"runMain {main_class} {extraargs} --target-dir={outputdir}"]
 
         # Concatenate environment variables from system + user defined
         d = os.environ
