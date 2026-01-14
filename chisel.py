@@ -28,6 +28,7 @@ class ChiselGenerator(Generator):
         cwd = tmp_dir if copy_core else self.files_root
 
         files = self.config['output'].get('files', [])
+        filelists = self.config['output'].get('filelists', [])
         parameters = self.config['output'].get('parameters', {})
 
         # Find build tool, first in root dir, then ./scripts dir then in path
@@ -67,6 +68,16 @@ class ChiselGenerator(Generator):
         if rc:
             exit(1)
         if cwd:
+            for f in filelists:
+                for filelist_name, properties in f.items():
+                    filelist_dir = os.path.dirname(filelist_name)
+                    # Open the filelist
+                    with open(os.path.join(cwd, filelist_name)) as f:
+                        # Add each file to `files`
+                        for filename in f:
+                            path = os.path.join(filelist_dir, filename.rstrip())
+                            files.append({path: properties})
+
             filenames = []
             for f in files:
                 for k in f:
