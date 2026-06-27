@@ -11,12 +11,12 @@ class ChiselGenerator(Generator):
     def run(self):
         env = self.config.get('env', None)
         buildtool = self.config.get('buildtool', "mill")
-        chiselproject = self.config.get('chiselproject', None)
+        milltask = self.config.get('milltask', None)
         outputdir = self.config.get('outputdir', "generated")
         extraargs = self.config.get('extraargs', "")
         main_class = self.config.get('main_class', None)
-        if buildtool == "mill" and chiselproject == None:
-            print("The parameter 'chiselproject' must be defined.")
+        if buildtool == "mill" and milltask == None:
+            print("The parameter 'milltask' must be defined.")
             exit(1)
 
         copy_core = self.config.get('copy_core', False)
@@ -46,7 +46,7 @@ class ChiselGenerator(Generator):
 
         # Define command and arguments based on build tool
         if buildtool == "mill":
-            args = '-i ' + chiselproject + '.run ' + extraargs + ' --target-dir='+ outputdir
+            args = f"-i {milltask} {extraargs} --target-dir={outputdir}"
             args = shlex.split(args)
         elif buildtool == "sbt":
             args = [f"runMain {main_class} {extraargs} --target-dir={outputdir}"]
